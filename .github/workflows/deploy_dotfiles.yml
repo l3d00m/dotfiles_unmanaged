@@ -1,32 +1,30 @@
-# This is a basic workflow to help you get started with Actions
-
 name: dotfiles deploy
 
-# Controls when the workflow will run
 on:
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+ schedule:
+   - cron: '0 18 * * *'
+ workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+
 jobs:
-  # This workflow contains a single job called "build"
   dotfiles:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
     steps:
       - run: sudo apt-get install -y rename
       - uses: actions/checkout@v3
-      - run: git rm -r *    
+        with:
+          path: 'repo'
       - uses: actions/checkout@v3
         with:
           repository: l3d00m/dotfiles
           ref: refs/heads/main
           path: 'orig_dotfiles'
-  
       - name: Copy files
         run: |
           cp -r orig_dotfiles/dot** .
           cp -r orig_dotfiles/private_dot** .
+          cp -r repo/.git .
+          cp -r repo/.github .
           rename 's/^(private_)?dot_/./' *
-          rm -r orig_dotfiles
+          rm -r orig_dotfiles repo
       - uses: EndBug/add-and-commit@v9
