@@ -25,7 +25,7 @@ jobs:
           cp -r orig_dotfiles/private_dot** .
           cp -r repo/.git .
           cp -r repo/.github .
-          cp install.sh .
+          cp orig_dotfiles/*.sh .
           rename 's/^(private_)?dot_/./' *
           rm -r orig_dotfiles repo
       - uses: EndBug/add-and-commit@v9
